@@ -11,7 +11,7 @@ public class TestCql {
         String sql  = select.eq("name1","name1").gt("col1","3").ne("col2","5")
                 .OR().gt("name1","name2").OR().ne("col3","col4")
                 .le("name5","6").toQueryString();
-        System.out.println(sql);
+        System.out.println(sql+"zzzz");
     }
 
 }
