@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="x.y.service.Foo" table="AUDIT_CONFIGURATION" >
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="12" scale="0" />
+            <generator class="sequence">
+            	<param name="sequence">AUDIT_CONFIGURATION_ID</param>
+            </generator>
+        </id>
+        <property name="fooName" type="java.lang.String">
+            <column name="foo_Name" length="30" not-null="true" />
+        </property>
+        <property name="barName" type="java.lang.String">
+            <column name="bar_Name" length="60" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

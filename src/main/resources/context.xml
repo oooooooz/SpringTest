@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--suppress ALL -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-2.5.xsd"
+        >
+
+    <context:annotation-config />
+    <bean id="fooService" class="x.y.service.DefaultFooService" >
+        <!--<property name="dao" ref="myJdbcDao"/>-->
+      </bean>
+
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="*update*" rollback-for="Exception" propagation="REQUIRES_NEW"/>
+            <!--<tx:method name="*" rollback-for="Exception" />-->
+            <tx:method name="insert*"  rollback-for="Exception"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--do not use CGLIB , proxy-target-class default is false-->
+    <aop:config proxy-target-class="false">
+        <aop:pointcut id="fooServiceOperation" expression="execution(* x.y..*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="fooServiceOperation"/>
+    </aop:config>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/sms"/>
+        <property name="username" value="root"/>
+        <property name="password" value="rootff"/>
+    </bean>
+
+    <bean id="cacheDataSource" class="ehcache.engine.CacheDataSource" init-method="init" destroy-method="close"/>
+
+
+    <!--<bean id="jtaTxManager" class="org.springframework.transaction.jta.JtaTransactionManager">-->
+    <!--</bean>-->
+
+    <!--hibernate4-->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--<property name="jtaTransactionManager" ref="jtaTxManager"/>-->
+        <!--<property name="dataSource" ref="cacheDataSource"/>-->
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+            </props>
+        </property>
+        <!--<property name="configLocation" value="foo.hbm.xml"/>-->
+    </bean>
+
+
+
+
+    <bean id="myJdbcDao" class="x.y.dao.SpringJdbcDao">
+        <property name="dataSource" ref="dataSource"/>
+        <!--<property name="dataSource" ref="cacheDataSource"/>-->
+    </bean>
+
+    <bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="foo1" class="x.y.service.Foo">
+        <property name="id" value="1"/>
+        <property name="barName" value="barName1"/>
+        <property name="fooName" value="fooName1"/>
+    </bean>
+
+    <bean id="foo2" class="x.y.service.Foo" scope="prototype">
+        <property name="id" value="2"/>
+        <property name="barName" value="barName2"/>
+        <property name="fooName" value="fooName2"/>
+    </bean>
+</beans>
