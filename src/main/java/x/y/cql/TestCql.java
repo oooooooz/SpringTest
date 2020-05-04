@@ -14,4 +14,8 @@ public class TestCql {
         System.out.println(sql);
     }
 
+    private static void m1(){
+        //
+    }
+
 }

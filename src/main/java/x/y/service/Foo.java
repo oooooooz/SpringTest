@@ -17,10 +17,9 @@ public class Foo implements ApplicationListener<ContextRefreshedEvent>,
         BeanPostProcessor,BeanFactoryAware,InitializingBean,Ordered {
 
     private Long id;
-
     private String fooName;
-
     private String barName;
+    private Long id2;
 
     public String getFooName() {
         return fooName;
