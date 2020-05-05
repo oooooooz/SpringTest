@@ -15,7 +15,7 @@ public class TestCql {
     }
 
     private static void m1(){
-        //
+        System.out.println("m45 method");
     }
 
 }
