@@ -1,2 +1,5 @@
 target/
 gitignore
+.idea
+.gitignore
+SpringTest.iml
